@@ -8,6 +8,8 @@ import {
     ValidationErrors,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../services/user.service';
+import { of } from 'rxjs';
 
 @Component({
     selector: 'app-register',
@@ -17,6 +19,13 @@ import { CommonModule } from '@angular/common';
     styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+    serverError: String = '';
+    serverSuccess: String = '';
+
+    isProcessing: boolean = false;
+
+    constructor(private userService: UserService) {}
+
     registerForm = new FormGroup(
         {
             username: new FormControl('', [
@@ -42,14 +51,41 @@ export class RegisterComponent {
 
     onSubmit() {
         if (this.registerForm.valid) {
+            this.isProcessing = true;
+            this.serverError = '';
+            this.serverSuccess = '';
+
             const formValue = {
-                username: this.registerForm.value.username?.trim(),
-                email: this.registerForm.value.email?.trim(),
-                password: this.registerForm.value.password?.trim(),
+                username: this.registerForm.value.username!.trim(),
+                email: this.registerForm.value.email!.trim(),
+                password: this.registerForm.value.password!.trim(),
             };
 
             // Envoyer formValue au backend
             console.log('Inscription valide:', formValue);
+            this.userService.register(formValue).subscribe({
+                next: (user) => {
+                    console.log('Inscription réussie:', user);
+                    this.serverSuccess = 'Inscription réussie';
+                },
+                error: (err) => {
+                    console.error("Erreur lors de l'inscription:", err);
+                    this.isProcessing = false;
+
+                    // Exemple de gestion d'erreur détaillée
+                    if (err.status === 409) {
+                        this.serverError = 'Cet email est déjà utilisé';
+                    } else if (err.status === 0) {
+                        this.serverError =
+                            'Impossible de se connecter au serveur';
+                    } else {
+                        this.serverError = 'Une erreur inattendue est survenue';
+                    }
+                },
+                complete: () => {
+                    console.log('Requête terminée');
+                },
+            });
         }
     }
 }

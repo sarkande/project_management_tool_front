@@ -1,6 +1,15 @@
 <div id="register-form">
     <h2 class="mb-5">Inscription</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="serverSuccess.length > 0" class="alert alert-success">
+        <div>
+            {{ serverSuccess }}
+        </div>
+    </div>
+    <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+        *ngIf="serverSuccess.length === 0"
+    >
         <!-- Nom d'utilisateur -->
         <div class="mb-3">
             <label for="username" class="form-label">Nom d'utilisateur</label>
@@ -109,11 +118,20 @@
                 </div>
             </div>
         </div>
+        <div *ngIf="serverError.length > 0" class="alert alert-danger">
+            {{ serverError }}
+        </div>
 
+        <ng-container *ngIf="isProcessing && !serverSuccess.length">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Traitement en cours...</span>
+            </div>
+        </ng-container>
         <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="registerForm.invalid"
+            [disabled]="registerForm.invalid || isProcessing"
+            *ngIf="!isProcessing"
         >
             Inscription
         </button>
