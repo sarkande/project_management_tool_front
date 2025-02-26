@@ -1,0 +1,50 @@
+#login-form {
+    border: solid 1px #00aeff;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 0 auto;
+    width: 300px;
+    opacity: 0;
+    animation: fadeIn 1s forwards, borderAnimation 2s ease-in-out forwards;
+    .mb-3 {
+        opacity: 0;
+        animation: fadeIn 1s ease-in-out 0.5s forwards;
+    }
+    input.form-control {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideUp 0.8s ease-in-out forwards;
+        &:nth-child(2) {
+            animation-delay: 1s;
+        }
+    }
+
+    button.btn {
+        opacity: 0;
+        animation: fadeIn 1s ease-in-out 2s forwards;
+        &:disabled {
+            background-color: rgb(183, 183, 183);
+            border-color: rgb(183, 183, 183);
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

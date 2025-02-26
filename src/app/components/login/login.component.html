@@ -1,0 +1,52 @@
+<div id="login-form">
+    <h2 class="mb-5">Connexion</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label for="email" class="form-label">Adresse email</label>
+            <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                #email
+                formControlName="email"
+                [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            >
+            <div *ngIf="loginForm.get('email')?.errors" class="invalid-feedback">
+                <div *ngIf="loginForm.get('email')?.hasError('required')">
+                    L'email est obligatoire
+                </div>
+                <div *ngIf="loginForm.get('email')?.hasError('email')">
+                    Format d'email invalide
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                #password
+                formControlName="password"
+                [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            >
+            <div *ngIf="loginForm.get('password')?.errors" class="invalid-feedback">
+                <div *ngIf="loginForm.get('password')?.hasError('required')">
+                    Le mot de passe est obligatoire
+                </div>
+                <div *ngIf="loginForm.get('password')?.hasError('minlength')">
+                    Minimum 8 caractères
+                </div>
+            </div>
+        </div>
+
+        <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="loginForm.invalid"
+        >
+            Connexion
+        </button>
+    </form>
+</div>

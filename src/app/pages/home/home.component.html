@@ -1,0 +1,28 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+        <h1 class="mb-5">Project Management Tool</h1>
+        <div class="d-grid gap-2">
+            <ng-container *ngIf="isLoginVisible || isRegisterVisible">
+                <div class="mt-5">
+                    <app-login *ngIf="isLoginVisible"></app-login>
+                    <app-register *ngIf="isRegisterVisible"></app-register>
+                </div>
+                <hr />
+            </ng-container>
+            <button
+                class="btn btn-primary btn-lg"
+                (click)="openForm('login')"
+                *ngIf="!isLoginVisible"
+            >
+                Connexion
+            </button>
+            <button
+                class="btn btn-secondary btn-lg"
+                (click)="openForm('register')"
+                *ngIf="!isRegisterVisible"
+            >
+                Inscription
+            </button>
+        </div>
+    </div>
+</div>
