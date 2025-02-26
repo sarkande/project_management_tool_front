@@ -6,6 +6,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-login',
@@ -17,6 +18,8 @@ import {
 export class LoginComponent implements AfterViewInit {
     @ViewChild('email') email!: ElementRef<HTMLInputElement>;
     @ViewChild('password') password!: ElementRef<HTMLInputElement>;
+
+    constructor(private userService:UserService) {}
 
     //Login form for validators
     loginForm = new FormGroup({
@@ -37,6 +40,15 @@ export class LoginComponent implements AfterViewInit {
         if (this.loginForm.valid) {
             // Envoyer les données au backend
             console.log('Formulaire valide:', this.loginForm.value);
+
+            this.userService.login(this.loginForm.value).subscribe({
+                next: (user) => {
+                    console.log('Utilisateur connecté:', user);
+                },
+                error: (error) => {
+                    console.error('Erreur de connexion:', error);
+                },
+            });
         }
     }
 }
