@@ -1,14 +1,121 @@
 <div id="register-form">
     <h2 class="mb-5">Inscription</h2>
-    <form>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Nom d'utilisateur -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Nom d'utilisateur</label>
+            <input
+                type="text"
+                class="form-control"
+                id="username"
+                formControlName="username"
+                [class.is-invalid]="
+                    registerForm.get('username')?.invalid &&
+                    registerForm.get('username')?.touched
+                "
+            />
+            <div class="invalid-feedback">
+                <div *ngIf="registerForm.get('username')?.hasError('required')">
+                    Le nom d'utilisateur est obligatoire
+                </div>
+                <div
+                    *ngIf="
+                        registerForm.get('username')?.hasError('minlength') ||
+                        registerForm.get('username')?.hasError('maxlength')
+                    "
+                >
+                    3 à 50 caractères
+                </div>
+            </div>
+        </div>
+
+        <!-- Email -->
         <div class="mb-3">
             <label for="email" class="form-label">Adresse email</label>
-            <input type="email" class="form-control" id="email" />
+            <input
+                type="email"
+                class="form-control"
+                id="email"
+                formControlName="email"
+                [class.is-invalid]="
+                    registerForm.get('email')?.invalid &&
+                    registerForm.get('email')?.touched
+                "
+            />
+            <div class="invalid-feedback">
+                <div *ngIf="registerForm.get('email')?.hasError('required')">
+                    L'email est obligatoire
+                </div>
+                <div *ngIf="registerForm.get('email')?.hasError('email')">
+                    Format d'email invalide
+                </div>
+            </div>
         </div>
+
+        <!-- Mot de passe -->
         <div class="mb-3">
             <label for="password" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control" id="password" />
+            <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                [class.is-invalid]="
+                    registerForm.get('password')?.invalid &&
+                    registerForm.get('password')?.touched
+                "
+            />
+            <div class="invalid-feedback">
+                <div *ngIf="registerForm.get('password')?.hasError('required')">
+                    Le mot de passe est obligatoire
+                </div>
+                <div
+                    *ngIf="registerForm.get('password')?.hasError('minlength')"
+                >
+                    Minimum 8 caractères
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Inscription</button>
+
+        <!-- Confirmation mot de passe -->
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label"
+                >Confirmer le mot de passe</label
+            >
+            <input
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                [class.is-invalid]="(registerForm.get('confirmPassword')?.invalid || registerForm.errors?.['mismatch']) 
+            && (registerForm.get('confirmPassword')?.dirty || registerForm.get('password')?.dirty)"
+            />
+            <div class="invalid-feedback">
+                <div
+                    *ngIf="
+                        registerForm
+                            .get('confirmPassword')
+                            ?.hasError('required') &&
+                        registerForm.get('confirmPassword')?.dirty
+                    "
+                >
+                    La confirmation est obligatoire
+                </div>
+                <div
+                    *ngIf="registerForm.errors?.['mismatch'] 
+                  && (registerForm.get('confirmPassword')?.dirty || registerForm.get('password')?.dirty)"
+                >
+                    Les mots de passe ne correspondent pas
+                </div>
+            </div>
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="registerForm.invalid"
+        >
+            Inscription
+        </button>
     </form>
 </div>

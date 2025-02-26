@@ -11,8 +11,8 @@ import { CommonModule } from '@angular/common';
     styleUrl: './home.component.scss',
 })
 export class HOMEComponent {
-    _isLoginVisible = true;
-    _isRegisterVisible = false;
+    _isLoginVisible = false;
+    _isRegisterVisible = true;
 
     openForm(formType: string) {
         if (formType === 'login') this.isLoginVisible = true;
