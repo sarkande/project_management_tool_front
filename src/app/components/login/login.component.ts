@@ -6,7 +6,9 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
+import { UserAuthLogin } from '../../interfaces/user-auth-login';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -18,8 +20,8 @@ import { UserService } from '../../services/user.service';
 export class LoginComponent implements AfterViewInit {
     @ViewChild('email') email!: ElementRef<HTMLInputElement>;
     @ViewChild('password') password!: ElementRef<HTMLInputElement>;
-
-    constructor(private userService:UserService) {}
+    error = '';
+    constructor(private authService: AuthService, private router: Router) {}
 
     //Login form for validators
     loginForm = new FormGroup({
@@ -38,15 +40,25 @@ export class LoginComponent implements AfterViewInit {
     }
     onSubmit() {
         if (this.loginForm.valid) {
+            this.error = '';
             // Envoyer les données au backend
             console.log('Formulaire valide:', this.loginForm.value);
-
-            this.userService.login(this.loginForm.value).subscribe({
+            const loginData: UserAuthLogin = {
+                email: this.loginForm.value.email!, // L'opérateur '!' indique que 'email' et 'password' ne sont pas null ni undefined
+                password: this.loginForm.value.password!,
+            };
+            this.authService.login(loginData).subscribe({
                 next: (user) => {
                     console.log('Utilisateur connecté:', user);
+                    //Redirect to dashboard
+                    //Activate guard
+                    this.router.navigate(['/dashboard']);
                 },
                 error: (error) => {
                     console.error('Erreur de connexion:', error);
+                    if (error.status === 401) {
+                        this.error = 'Email ou mot de passe incorrect';
+                    }
                 },
             });
         }
