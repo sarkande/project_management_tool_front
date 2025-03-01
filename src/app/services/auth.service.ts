@@ -4,6 +4,7 @@ import { UserAuthResponse } from '../interfaces/user-auth-response';
 import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
 import { UserAuthLogin } from '../interfaces/user-auth-login';
 import { StorageService } from './storage.service';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +16,8 @@ export class AuthService {
 
     constructor(
         private userService: UserService,
-        private storageService: StorageService
+        private storageService: StorageService,
+        private router: Router
     ) {
         const storedUser = this.storageService.getItem('currentUser');
         if (storedUser) {
@@ -30,11 +32,15 @@ export class AuthService {
     login(loginData: UserAuthLogin): Observable<UserAuthResponse> {
         return this.userService.login(loginData).pipe(
             tap((user: UserAuthResponse) => {
-                this.storageService.setItem('currentUser', JSON.stringify(user));
+                this.storageService.setItem(
+                    'currentUser',
+                    JSON.stringify(user)
+                );
                 this.currentUserSubject.next(user);
             }),
             catchError((error) => {
                 // Propager l'erreur pour un traitement ultérieur
+                console.log(error);
                 return throwError(() => error);
             })
         );
@@ -42,6 +48,9 @@ export class AuthService {
     logout(): void {
         this.storageService.removeItem('currentUser');
         this.currentUserSubject.next(null);
+
+        // Rediriger l'utilisateur vers la page de connexion
+        this.router.navigate(['/']);
     }
 
     isLoggedIn(): boolean {

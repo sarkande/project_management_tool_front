@@ -8,7 +8,6 @@ import { catchError, Observable, throwError } from 'rxjs';
 export class ApiService {
     private static baseURL: string = 'http://localhost:8080';
     constructor(private http: HttpClient) {}
-    
 
     get<T>(url: string): Observable<T> {
         return this.http
@@ -40,9 +39,14 @@ export class ApiService {
             .pipe(catchError(this.handleError));
     }
 
-
     private handleError(error: HttpErrorResponse) {
         console.error('An error occurred:', error.message);
-        return throwError(() => new Error('Something bad happened; please try again later.'));
+        var errorMessage = {
+            message: '',
+            status: error.status,
+        };
+        console.log(errorMessage);
+
+        return throwError(() => errorMessage);
     }
 }

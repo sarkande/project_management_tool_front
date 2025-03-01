@@ -55,9 +55,18 @@ export class LoginComponent implements AfterViewInit {
                     this.router.navigate(['/dashboard']);
                 },
                 error: (error) => {
-                    console.error('Erreur de connexion:', error);
-                    if (error.status === 401) {
-                        this.error = 'Email ou mot de passe incorrect';
+                    console.log('Erreur de connexion:', error);
+
+                    switch (error.status) {
+                        case 0:
+                            this.error = 'Serveur injoignable';
+                            break;
+                        case 401:
+                            this.error = 'Email ou mot de passe incorrect';
+                            break;
+                        default:
+                            this.error = 'Erreur interne du serveur';
+                            break;
                     }
                 },
             });
