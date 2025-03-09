@@ -1,4 +1,71 @@
-<p>project works!</p>
-<p>
-    {{ test }}
-</p>
+<!-- Bouton de retour amélioré -->
+<a routerLink="/dashboard" class="btn btn-secondary mb-3">
+    <i class="bi bi-arrow-left"></i> Retour au tableau de bord
+</a>
+
+<ng-container *ngIf="project">
+    <!-- Section Utilisateurs -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Utilisateurs du projet</h4>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li *ngFor="let user of users" class="list-group-item">
+                {{ user.email }} - Rôle : {{ user.role }}
+            </li>
+        </ul>
+    </div>
+
+    <!-- Formulaire d'ajout d'utilisateur -->
+    <div class="card mt-4" *ngIf="isUserAdmin">
+        <div class="card-body">
+            <h5 class="card-title">Ajouter un utilisateur</h5>
+            <form>
+                <div class="mb-3">
+                    <label for="userEmail" class="form-label"
+                        >Email de l'utilisateur</label
+                    >
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="userEmail"
+                        name="email"
+                        required
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>{{ project.name }}</h2>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Détails du projet</h5>
+            <p class="card-text">{{ project.description }}</p>
+            <h6 class="card-subtitle mb-2 text-muted">
+                Date de début : {{ project.startDate | date : "mediumDate" }}
+            </h6>
+        </div>
+    </div>
+
+    <!-- Section Tâches -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Tâches du projet</h4>
+        </div>
+        <ul class="list-group
+            list-group-flush">
+            <li *ngFor="let task of tasks" class="list-group-item">
+                {{ task.name }} - {{ task.description }}
+            </li>
+        </ul>
+    </div>
+</ng-container>
+<!-- Message d'erreur si aucun projet n'est trouvé -->
+<ng-container *ngIf="!project">
+    <div class="alert alert-warning" role="alert">Aucun projet trouvé.</div>
+</ng-container>

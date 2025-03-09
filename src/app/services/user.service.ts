@@ -4,7 +4,7 @@ import { UserRegister } from '../interfaces/user-register';
 import { Observable } from 'rxjs';
 import { User } from '../interfaces/user';
 import { UserAuthLogin } from '../interfaces/user-auth-login';
-import { Project } from '../interfaces/project';
+import { ProjectWithRole } from '../interfaces/project-with-role';
 @Injectable({
     providedIn: 'root',
 })
@@ -18,7 +18,9 @@ export class UserService {
     login(user: UserAuthLogin): Observable<User> {
         return this.apiService.post<User>('/user/login', user);
     }
-    getProjects(id: Number): Observable<Project> {
-        return this.apiService.get<Project>('/user/' + id + '/projects');
+    getProjects(id: Number): Observable<ProjectWithRole[]> {
+        return this.apiService.get<ProjectWithRole[]>(
+            '/user/' + id + '/projects'
+        );
     }
 }
