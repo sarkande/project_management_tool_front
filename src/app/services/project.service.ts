@@ -20,4 +20,14 @@ export class ProjectService {
     getUsersByProject(projectId: number): Observable<any> {
         return this.apiService.get('/project/' + projectId + '/users');
     }
+
+    //  @PostMapping("/project/{projectId}/adduser")
+    // public Integer addUserToProject(@PathVariable Integer projectId, @RequestParam String userMail, @RequestParam String role, @RequestParam Integer currentUser) {
+    addUserToProject(projectId: number, userMail: string, role: string, currentUser: number): Observable<number> {
+        return this.apiService.post('/project/' + projectId + '/adduser', {
+            userMail,
+            role,
+            currentUser,
+        });
+    }
 }
