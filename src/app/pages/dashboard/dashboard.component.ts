@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
                 this.projects = projects;
             },
             error: (error) => {
-                console.log('Error:', error);
+                console.error('Error:', error);
             },
         });
     }
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
         this.successMessage = '';
         this.errorMessage = '';
 
-        console.log('Received project data:', projectData);
+        console.error('Received project data:', projectData);
         // Traitez ici les données du projet, comme les envoyer à un service ou les stocker
         this.projectService
             .createProject(projectData, this.user!.id)
@@ -79,7 +79,7 @@ export class DashboardComponent implements OnInit {
                     this.successMessage = 'Projet créé avec succès';
                 },
                 error: (error) => {
-                    console.log('Erreur:', error);
+                    console.error('Erreur:', error);
                     switch (error.status) {
                         case 0:
                             this.errorMessage = 'Le serveur est injoignable';

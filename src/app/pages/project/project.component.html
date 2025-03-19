@@ -18,7 +18,10 @@
 
     <!-- Formulaire d'ajout d'utilisateur -->
     <div class="card mt-4" *ngIf="isUserAdmin">
-        <app-form-manage-user-project [projectId]="project.id" />
+        <app-form-manage-user-project
+            [projectId]="project.id"
+            (refreshUsers)="handleRefreshUsers()"
+        />
     </div>
 
     <!-- Contenu principal -->
@@ -33,6 +36,13 @@
                 Date de début : {{ project.startDate | date : "mediumDate" }}
             </h6>
         </div>
+    </div>
+
+    <div class="card mt-4" *ngIf="isUserAdmin">
+        <button class="btn btn-primary" (click)="handleOpenCreateTaskForm()">
+            Créer une tâche
+        </button>
+        <app-form-task *ngIf="isOpenCreateTaskForm" />
     </div>
 
     <!-- Section Tâches -->

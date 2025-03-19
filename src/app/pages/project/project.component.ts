@@ -7,12 +7,18 @@ import { User } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../interfaces/task';
-import { FormManageUserProjectComponent } from "../../components/form-manage-user-project/form-manage-user-project.component";
+import { FormManageUserProjectComponent } from '../../components/form-manage-user-project/form-manage-user-project.component';
+import { FormTaskComponent } from '../../components/form-task/form-task.component';
 
 @Component({
     selector: 'app-project',
     standalone: true,
-    imports: [CommonModule, RouterModule, FormManageUserProjectComponent, FormManageUserProjectComponent],
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormManageUserProjectComponent,
+        FormTaskComponent,
+    ],
     templateUrl: './project.component.html',
     styleUrl: './project.component.scss',
 })
@@ -22,6 +28,7 @@ export class ProjectComponent implements OnInit {
     tasks: Task[] = [];
 
     currentUserRole = '';
+    isOpenCreateTaskForm = false;
     constructor(
         private projectService: ProjectService,
         private route: ActivatedRoute,
@@ -47,7 +54,7 @@ export class ProjectComponent implements OnInit {
                 this.project = project;
             },
             error: (error) => {
-                console.log('Error:', error);
+                console.error('Error:', error);
             },
         });
 
@@ -69,7 +76,7 @@ export class ProjectComponent implements OnInit {
                 console.log('Current user role:', this.currentUserRole);
             },
             error: (error) => {
-                console.log('Error:', error);
+                console.error('Error:', error);
             },
         });
 
@@ -80,7 +87,7 @@ export class ProjectComponent implements OnInit {
                 this.tasks = tasks;
             },
             error: (error) => {
-                console.log('Error:', error);
+                console.error('Error:', error);
             },
         });
     }
@@ -95,88 +102,16 @@ export class ProjectComponent implements OnInit {
         return this.currentUserRole === 'Observateur';
     }
 
-    handleAddUserToProject(event: any): void {
-        //prevent default
-        event.preventDefault();
-        console.log('Event:', event);
-        if (event.userMail === '') {
-            console.log('User mail is empty');
-            return;
-        }
-        let role = this.convertRoleToFrench(event.role);
-        if (!this.isRoleAvailable(role)) {
-            console.log('Role is not available');
-            return;
-        }
-
-        this.addUserToProject(event.userMail, role);
+    handleRefreshUsers(): void {
+        this.projectService.getUsersByProject(this.project!.id).subscribe({
+            next: (users) => {
+                console.log('Users:', users);
+                this.users = users as User[];
+            },
+        });
     }
 
-    addUserToProject(userMail: string, role: string): void {
-        console.log('Checking if current user is admin');
-        if (!this.isUserAdmin) {
-            console.log('Current user is not admin');
-            return;
-        }
-
-        console.log('Checking if project is defined');
-        if (!this.project) {
-            console.log('Project is not defined');
-            return;
-        }
-
-        console.log('Checking if userMail is empty');
-        if (userMail === '') {
-            console.log('User mail is empty');
-            return;
-        }
-
-        if (!this.isRoleAvailable(role)) return;
-
-        this.projectService
-            .addUserToProject(
-                this.project.id,
-                userMail,
-                role,
-                this.authService.user!.id
-            )
-            .subscribe({
-                next: (response) => {
-                    console.log('Response:', response);
-                    let newUser: User = {
-                        id: response,
-                        email: userMail,
-                        role: role,
-                        username: userMail,
-                    };
-                    this.users.push(newUser);
-                },
-                error: (error) => {
-                    console.log('Error:', error);
-                },
-            });
-    }
-
-    isRoleAvailable(role: string): boolean {
-        console.log('Role:', role);
-        return (
-            role === 'Administrateur' ||
-            role === 'Membre' ||
-            role === 'Observateur'
-        );
-    }
-
-    convertRoleToFrench(role: string): string {
-        console.log('Role:', role);
-        switch (role) {
-            case 'admin':
-                return 'Administrateur';
-            case 'member':
-                return 'Membre';
-            case 'watcher':
-                return 'Observateur';
-            default:
-                return 'Inconnu';
-        }
+    handleOpenCreateTaskForm(): void {
+        this.isOpenCreateTaskForm = !this.isOpenCreateTaskForm;
     }
 }

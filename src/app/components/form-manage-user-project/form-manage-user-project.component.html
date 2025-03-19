@@ -1,1 +1,43 @@
-<p>form-manage-user-project works!</p>
+<ng-container *ngIf="errorMessage.length > 0">
+    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+</ng-container>
+<ng-container *ngIf="successMessage.length > 0">
+    <div class="alert alert-success" role="alert">{{ successMessage }}</div>
+</ng-container>
+<form
+    [formGroup]="userForm"
+    (ngSubmit)="addUserToProject()"
+    class="d-flex align-items-end"
+>
+    <div class="flex-fill me-2">
+        <input
+            type="email"
+            class="form-control"
+            id="email"
+            formControlName="email"
+            placeholder="Enter email"
+        />
+        <div
+            *ngIf="userForm.get('email')?.touched && userForm.get('email')?.errors?.['required']"
+            class="text-danger"
+        >
+            Email is required.
+        </div>
+        <div
+            *ngIf="userForm.get('email')?.touched && userForm.get('email')?.errors?.['email']"
+            class="text-danger"
+        >
+            Please enter a valid email.
+        </div>
+    </div>
+
+    <div class="flex-fill me-2">
+        <select class="form-select" id="role" formControlName="role">
+            <option value="member" selected>Membre</option>
+            <option value="watcher">Observateur</option>
+            <option value="admin">Admin</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

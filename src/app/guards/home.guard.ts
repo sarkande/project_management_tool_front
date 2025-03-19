@@ -5,7 +5,6 @@ import { AuthService } from '../services/auth.service';
 export const HomeGuard: CanActivateFn = (route, state) => {
     const auth = inject(AuthService);
     const router = inject(Router);
-    console.log('HomeGuard:', auth.isLoggedIn());
     if (auth.isLoggedIn()) {
         router.navigate(['/dashboard']);
         return false;

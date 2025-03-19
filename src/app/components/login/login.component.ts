@@ -55,7 +55,7 @@ export class LoginComponent implements AfterViewInit {
                     this.router.navigate(['/dashboard']);
                 },
                 error: (error) => {
-                    console.log('Erreur de connexion:', error);
+                    console.error('Erreur de connexion:', error);
 
                     switch (error.status) {
                         case 0:

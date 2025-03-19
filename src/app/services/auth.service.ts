@@ -40,7 +40,7 @@ export class AuthService {
             }),
             catchError((error) => {
                 // Propager l'erreur pour un traitement ultérieur
-                console.log(error);
+                console.error(error);
                 return throwError(() => error);
             })
         );

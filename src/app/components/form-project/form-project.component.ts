@@ -40,7 +40,7 @@ export class FormProjectComponent {
             console.log('Creating project:', project);
             this.onSubmit.emit(project);
         } else {
-            console.log('Form is not valid', this.projectForm.errors);
+            console.error('Form is not valid', this.projectForm.errors);
         }
     }
 }
