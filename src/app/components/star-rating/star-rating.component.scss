@@ -10,7 +10,6 @@ $star-color-selected: #ffc107;
     span {
         cursor: pointer;
 
-        &:hover,
         &.hovered {
             color: $star-color-hovered;
         }

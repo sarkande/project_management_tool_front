@@ -9,6 +9,7 @@ import { TaskService } from '../../services/task.service';
 import { Task } from '../../interfaces/task';
 import { FormManageUserProjectComponent } from '../../components/form-manage-user-project/form-manage-user-project.component';
 import { FormTaskComponent } from '../../components/form-task/form-task.component';
+import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
 
 @Component({
     selector: 'app-project',
@@ -18,6 +19,7 @@ import { FormTaskComponent } from '../../components/form-task/form-task.componen
         RouterModule,
         FormManageUserProjectComponent,
         FormTaskComponent,
+        StarRatingComponent,
     ],
     templateUrl: './project.component.html',
     styleUrl: './project.component.scss',
@@ -113,5 +115,18 @@ export class ProjectComponent implements OnInit {
 
     handleOpenCreateTaskForm(): void {
         this.isOpenCreateTaskForm = !this.isOpenCreateTaskForm;
+    }
+
+    translateStatus(text: string) {
+        switch (text.toLowerCase()) {
+            case 'pending':
+                return 'En attente';
+            case 'in_progress':
+                return 'En cours';
+            case 'done':
+                return 'Terminé';
+            default:
+                return text;
+        }
     }
 }
