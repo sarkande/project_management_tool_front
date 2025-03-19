@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export interface Task {
     id?: number;
     name: string;
@@ -5,4 +7,5 @@ export interface Task {
     priority: number;
     dueDate?: Date;
     status: string;
+    users?: User[];
 }

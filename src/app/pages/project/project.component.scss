@@ -1,0 +1,47 @@
+.card {
+    .card-header {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .list-group-item {
+        border-bottom: 1px solid #f8f9fa; 
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:nth-child(odd) {
+            background-color: #f7f7f7;
+        }
+
+        .row {
+            align-items: center;
+
+            .col-md-4 {
+                &.text-md-end {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: end;
+                }
+
+                h5 {
+                    color: #343a40;
+                }
+
+                p,
+                small {
+                    color: #6c757d;
+                }
+
+                button {
+                    margin-top: 10px; 
+                }
+
+                .badge {
+                    margin-top: 10px; 
+                }
+            }
+        }
+    }
+}

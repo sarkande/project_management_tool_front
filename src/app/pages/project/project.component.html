@@ -51,25 +51,54 @@
             <h4>Tâches du projet</h4>
         </div>
         <ul class="list-group list-group-flush">
-            <li
-                *ngFor="let task of tasks"
-                class="list-group-item d-flex justify-content-between align-items-center"
-            >
-                <div>
-                    <h5>{{ task.name }}</h5>
-                    <p class="mb-1">{{ task.description }}</p>
-                    <small class="text-muted"
-                        >Échéance :
-                        {{ task.dueDate ? (task.dueDate | date : "mediumDate") : 'Non défini' }}</small
-                    >
-                </div>
-                <div>
-                    <span class="badge bg-primary me-2">{{ translateStatus(task.status) }}</span>
-                    <span class="badge bg-secondary"
-                        ><app-star-rating
+            <li *ngFor="let task of tasks" class="list-group-item">
+                <div class="row">
+                    <!-- Informations de la tâche -->
+                    <div class="col-md-4">
+                        <h5>{{ task.name }}</h5>
+                        <p>{{ task.description }}</p>
+                        <small class="text-muted">
+                            Échéance :
+                            {{
+                                task.dueDate
+                                    ? (task.dueDate | date : "mediumDate")
+                                    : "Non défini"
+                            }}
+                        </small>
+                    </div>
+
+                    <!-- Gestion des utilisateurs -->
+                    <div class="col-md-4">
+                        <ul
+                            class="list-unstyled"
+                            *ngIf="task.users && task.users.length > 0"
+                        >
+                            <li *ngFor="let user of task.users">
+                                {{ user.email }}
+                            </li>
+                        </ul>
+                        <div
+                            class="alert alert-warning"
+                            role="alert"
+                            *ngIf="!task.users || task.users.length === 0"
+                        >
+                            Aucun utilisateur assigné.
+                        </div>
+                        <button class="btn btn-sm btn-outline-secondary">
+                            Ajouter un utilisateur
+                        </button>
+                    </div>
+
+                    <!-- Priorité et statut -->
+                    <div class="col-md-4 text-md-end">
+                        <span class="badge bg-primary">{{
+                            translateStatus(task.status)
+                        }}</span>
+                        <app-star-rating
                             [priority]="task.priority"
                             [readonly]="true"
-                    /></span>
+                        ></app-star-rating>
+                    </div>
                 </div>
             </li>
         </ul>
