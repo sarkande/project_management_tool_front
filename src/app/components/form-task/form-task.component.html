@@ -1,4 +1,8 @@
-<form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="container mt-4">
+<form
+    [formGroup]="taskForm"
+    (ngSubmit)="onSubmit()"
+    class="container mt-4 mb-3"
+>
     <div class="mb-3">
         <label for="name" class="form-label">Nom</label>
         <input
@@ -6,19 +10,19 @@
             class="form-control"
             id="name"
             formControlName="name"
-            placeholder="Enter task name"
+            placeholder="Entrez le nom de la tâchee"
         />
         <div
-            *ngIf="taskForm.get('name')?.errors?.['required'] ?? false"
+            *ngIf="taskForm.get('name')?.errors?.['required'] && taskForm.get('name')?.touched"
             class="text-danger"
         >
-            Name is required.
+            Le nom est requis.
         </div>
         <div
             *ngIf="taskForm.get('name')?.errors?.['maxlength']"
             class="text-danger"
         >
-            Name cannot be longer than 50 characters.
+            Le nom ne peut pas dépasser 50 caractères.
         </div>
     </div>
 
@@ -33,29 +37,15 @@
     </div>
 
     <div class="mb-3">
-        <label for="priority" class="form-label">Priority</label>
-        <input
-            type="number"
-            class="form-control"
-            id="priority"
-            formControlName="priority"
+        <label for="priority" class="form-label">Priorité</label>
+        <app-star-rating
+            [priority]="priorityValue"
+            (priorityChange)="taskForm.controls.priority.setValue($event)"
         />
-        <div
-            *ngIf="taskForm.get('priority')?.errors?.['required']"
-            class="text-danger"
-        >
-            Priority is required.
-        </div>
-        <div
-            *ngIf="taskForm.get('priority')?.errors?.['min'] || taskForm.get('priority')?.errors?.['max']"
-            class="text-danger"
-        >
-            Priority must be between 1 and 5.
-        </div>
     </div>
 
     <div class="mb-3">
-        <label for="dueDate" class="form-label">Due Date</label>
+        <label for="dueDate" class="form-label">Date d'échéance</label>
         <input
             type="date"
             class="form-control"
@@ -65,13 +55,15 @@
     </div>
 
     <div class="mb-3">
-        <label for="status" class="form-label">Status</label>
+        <label for="status" class="form-label">Statut</label>
         <select class="form-select" id="status" formControlName="status">
-            <option value="pending">Pending</option>
-            <option value="in_progress">In Progress</option>
-            <option value="completed">Completed</option>
+            <option value="pending">À faire</option>
+            <option value="in_progress">En cours</option>
+            <option value="completed">Terminé</option>
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!taskForm.valid">
+        Submit
+    </button>
 </form>

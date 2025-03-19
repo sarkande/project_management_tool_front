@@ -1,0 +1,9 @@
+<div class="star-rating">
+  <span *ngFor="let star of stars; let i = index"
+        (click)="setPriority(i)"
+        (mouseenter)="setHover(i)"
+        (mouseleave)="clearHover()"
+        [ngClass]="{'selected': i < priority, 'hovered': i <= hoveredIndex}">
+    &#9733; 
+  </span>
+</div>

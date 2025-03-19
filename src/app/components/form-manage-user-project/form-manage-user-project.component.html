@@ -15,19 +15,19 @@
             class="form-control"
             id="email"
             formControlName="email"
-            placeholder="Enter email"
+            placeholder="Entrez l'email de l'utilisateur"
         />
         <div
             *ngIf="userForm.get('email')?.touched && userForm.get('email')?.errors?.['required']"
             class="text-danger"
         >
-            Email is required.
+            Email Obligatoire.
         </div>
         <div
             *ngIf="userForm.get('email')?.touched && userForm.get('email')?.errors?.['email']"
             class="text-danger"
         >
-            Please enter a valid email.
+            Format d'email invalide.
         </div>
     </div>
 
@@ -39,5 +39,5 @@
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
 </form>
