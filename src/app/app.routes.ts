@@ -4,6 +4,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectComponent } from './pages/project/project.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeGuard } from './guards/home.guard';
+import { TaskComponent } from './pages/task/task.component';
 
 export const routes: Routes = [
     {
@@ -19,6 +20,11 @@ export const routes: Routes = [
     {
         path: 'project/:id',
         component: ProjectComponent,
+        canActivate: [AuthGuard],
+    },
+    {
+        path: 'project/:id/task/:taskId',
+        component: TaskComponent,
         canActivate: [AuthGuard],
     },
     {

@@ -1,7 +1,7 @@
 import { User } from './user';
 
-export interface Task {
-    id: number;
+export interface TaskForm {
+    id?: number;
     name: string;
     description?: string;
     priority: number;

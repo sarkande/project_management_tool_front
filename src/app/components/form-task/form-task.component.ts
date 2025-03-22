@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
     FormGroup,
     FormControl,
@@ -10,6 +10,7 @@ import {
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../interfaces/task';
+import { TaskForm } from '../../interfaces/task-form';
 
 @Component({
     selector: 'app-form-task',
@@ -25,6 +26,7 @@ import { Task } from '../../interfaces/task';
 })
 export class FormTaskComponent {
     @Input() projectId!: number;
+    @Output() refreshTasks = new EventEmitter<void>();
 
     constructor(private taskService: TaskService) {}
 
@@ -72,7 +74,7 @@ export class FormTaskComponent {
                 return;
             }
 
-            const data: Task = {
+            const data: TaskForm = {
                 name: name,
                 priority: priority,
                 status: status,
@@ -88,6 +90,9 @@ export class FormTaskComponent {
                 (task) => {
                     console.log('Task created', task);
                     this.taskForm.reset();
+
+                    //Emit an event to notify the parent component that a task has been created
+                    this.refreshTasks.emit();
                 },
                 (error) => {
                     console.error('Error creating task:', error);

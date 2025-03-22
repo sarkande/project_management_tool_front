@@ -10,6 +10,7 @@ import { Task } from '../../interfaces/task';
 import { FormManageUserProjectComponent } from '../../components/form-manage-user-project/form-manage-user-project.component';
 import { FormTaskComponent } from '../../components/form-task/form-task.component';
 import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-project',
@@ -31,11 +32,13 @@ export class ProjectComponent implements OnInit {
 
     currentUserRole = '';
     isOpenCreateTaskForm = false;
+
     constructor(
         private projectService: ProjectService,
         private route: ActivatedRoute,
         private authService: AuthService,
-        private taskService: TaskService
+        private taskService: TaskService,
+        private router: Router
     ) {}
     ngOnInit(): void {
         //get the id from the route
@@ -117,6 +120,15 @@ export class ProjectComponent implements OnInit {
         this.isOpenCreateTaskForm = !this.isOpenCreateTaskForm;
     }
 
+    handleRefreshTasks(): void {
+        this.taskService.getTasks(this.project!.id).subscribe({
+            next: (tasks) => {
+                console.log('Tasks:', tasks);
+                this.tasks = tasks;
+            },
+        });
+    }
+
     translateStatus(text: string) {
         switch (text.toLowerCase()) {
             case 'pending':
@@ -128,5 +140,12 @@ export class ProjectComponent implements OnInit {
             default:
                 return text;
         }
+    }
+
+    handleOpenTask(task: Task): void {
+        if (!this.project || !task) {
+            return;
+        }
+        this.router.navigate([`/project/${this.project!.id}/task/${task.id}`]);
     }
 }

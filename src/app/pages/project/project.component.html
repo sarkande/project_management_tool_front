@@ -42,7 +42,11 @@
         <button class="btn btn-primary" (click)="handleOpenCreateTaskForm()">
             Créer une tâche
         </button>
-        <app-form-task *ngIf="isOpenCreateTaskForm" [projectId]="project.id" />
+        <app-form-task
+            *ngIf="isOpenCreateTaskForm"
+            [projectId]="project.id"
+            (refreshTasks)="handleRefreshTasks()"
+        />
     </div>
 
     <!-- Section Tâches -->
@@ -51,7 +55,7 @@
             <h4>Tâches du projet</h4>
         </div>
         <ul class="list-group list-group-flush">
-            <li *ngFor="let task of tasks" class="list-group-item">
+            <li *ngFor="let task of tasks" class="list-group-item" (click)="handleOpenTask(task)">
                 <div class="row">
                     <!-- Informations de la tâche -->
                     <div class="col-md-4">
@@ -84,9 +88,6 @@
                         >
                             Aucun utilisateur assigné.
                         </div>
-                        <button class="btn btn-sm btn-outline-secondary">
-                            Ajouter un utilisateur
-                        </button>
                     </div>
 
                     <!-- Priorité et statut -->
