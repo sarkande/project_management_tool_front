@@ -20,4 +20,25 @@ export class TaskService {
     getTask(projectId: number, taskId: number): Observable<Task> {
         return this.apiService.get(`/project/${projectId}/task/${taskId}`);
     }
+    updateTask(
+        projectId: number,
+        taskId: number,
+        task: Task
+    ): Observable<void> {
+        return this.apiService.put(
+            `/project/${projectId}/task/${taskId}`,
+            task
+        );
+    }
+
+    updatePartialTask(
+        projectId: number,
+        taskId: number,
+        task: Partial<Task>
+    ): Observable<void> {
+        return this.apiService.patch(
+            `/project/${projectId}/task/${taskId}`,
+            task
+        );
+    }
 }

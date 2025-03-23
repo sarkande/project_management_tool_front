@@ -7,18 +7,66 @@
     <!-- Affichage des informations de la tâche avec Bootstrap -->
     <div class="card">
         <div class="card-body">
-            <h1 class="card-title">{{ task.name }}</h1>
-            <p class="card-text">{{ task.description }}</p>
-            <p class="card-text"><strong>Statut :</strong> {{ task.status }}</p>
-            <p class="card-text">
-                <strong>Échéance :</strong>
-                {{ task.dueDate | date : "longDate" }}
-            </p>
-            <p class="card-text">
-                <strong>Priorité :</strong>
-                <app-star-rating [priority]="task.priority" [readonly]="true">
-                </app-star-rating>
-            </p>
+            <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom</label>
+                    <input
+                        type="text"
+                        id="name"
+                        class="form-control"
+                        formControlName="name"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label"
+                        >Description</label
+                    >
+                    <textarea
+                        id="description"
+                        class="form-control"
+                        formControlName="description"
+                    ></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Statut</label>
+                    <select
+                        id="status"
+                        class="form-select"
+                        formControlName="status"
+                    >
+                        <option value="Open">Open</option>
+                        <option value="InProgress">InProgress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="dueDate" class="form-label">Échéance</label>
+                    <input
+                        type="date"
+                        id="dueDate"
+                        class="form-control"
+                        formControlName="dueDate"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="priority" class="form-label">Priorité</label>
+                    <app-star-rating
+                        [priority]="taskForm.get('priority')?.value"
+                        (priorityChange)="
+                            taskForm.get('priority')?.setValue($event)
+                        "
+                        [readonly]="false"
+                    >
+                    </app-star-rating>
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        [disabled]="!taskForm.dirty"
+                    >
+                        Sauvegarder
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -29,7 +77,7 @@
             <li class="list-group-item" *ngFor="let user of task.users">
                 <strong>{{ user.username }}</strong> ({{ user.email }})
                 <span class="badge bg-secondary float-right">{{
-                    user.role 
+                    user.role
                 }}</span>
             </li>
         </ul>
