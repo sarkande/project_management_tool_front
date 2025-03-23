@@ -1,1 +1,51 @@
-<p>task works!</p>
+<!-- Bouton de retour amélioré avec Bootstrap -->
+<a routerLink="../../" class="btn btn-secondary mb-3">
+    <i class="bi bi-arrow-left"></i> Retour au projet
+</a>
+
+<ng-container *ngIf="task">
+    <!-- Affichage des informations de la tâche avec Bootstrap -->
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">{{ task.name }}</h1>
+            <p class="card-text">{{ task.description }}</p>
+            <p class="card-text"><strong>Statut :</strong> {{ task.status }}</p>
+            <p class="card-text">
+                <strong>Échéance :</strong>
+                {{ task.dueDate | date : "longDate" }}
+            </p>
+            <p class="card-text">
+                <strong>Priorité :</strong>
+                <app-star-rating [priority]="task.priority" [readonly]="true">
+                </app-star-rating>
+            </p>
+        </div>
+    </div>
+
+    <!-- Section Utilisateurs avec exploitation de l'interface User -->
+    <div class="mt-4">
+        <h2>Utilisateurs</h2>
+        <ul class="list-group">
+            <li class="list-group-item" *ngFor="let user of task.users">
+                <strong>{{ user.username }}</strong> ({{ user.email }})
+                <span class="badge bg-secondary float-right">{{
+                    user.role 
+                }}</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Section Commentaires avec exploitation de l'interface Comment -->
+    <div class="mt-4">
+        <h2>Historique des actions</h2>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let comment of task.comments">
+                <p class="mb-1">{{ comment.content }}</p>
+                <small class="text-muted"
+                    >Créé par {{ comment.createdBy }} le
+                    {{ comment.createdAt | date : "medium" }}</small
+                >
+            </li>
+        </ul>
+    </div>
+</ng-container>

@@ -1,5 +1,5 @@
 import { User } from './user';
-
+import { Comment } from './comment';
 export interface Task {
     id: number;
     name: string;
@@ -8,4 +8,5 @@ export interface Task {
     dueDate?: Date;
     status: string;
     users?: User[];
+    comments?: Comment[];
 }

@@ -16,4 +16,8 @@ export class TaskService {
     postTask(projectId: number, task: TaskForm): Observable<Task> {
         return this.apiService.post(`/project/${projectId}/task`, task);
     }
+
+    getTask(projectId: number, taskId: number): Observable<Task> {
+        return this.apiService.get(`/project/${projectId}/task/${taskId}`);
+    }
 }

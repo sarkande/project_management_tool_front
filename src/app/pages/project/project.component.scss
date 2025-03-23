@@ -5,7 +5,15 @@
     }
 
     .list-group-item {
-        border-bottom: 1px solid #f8f9fa; 
+        border-bottom: 1px solid #f8f9fa;
+
+        &.task {
+            cursor: pointer;
+
+            &:hover {
+                background-color: #b6d8ff;
+            }
+        }
 
         &:last-child {
             border-bottom: none;
@@ -35,11 +43,11 @@
                 }
 
                 button {
-                    margin-top: 10px; 
+                    margin-top: 10px;
                 }
 
                 .badge {
-                    margin-top: 10px; 
+                    margin-top: 10px;
                 }
             }
         }
