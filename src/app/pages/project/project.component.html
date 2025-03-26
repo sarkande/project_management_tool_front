@@ -1,6 +1,6 @@
 <!-- Bouton de retour amélioré -->
-<a routerLink="/dashboard" class="btn btn-secondary mb-3">
-    <i class="bi bi-arrow-left"></i> Retour au tableau de bord
+<a routerLink="/projects" class="btn btn-secondary mb-3">
+    <i class="bi bi-arrow-left"></i> Retour à la liste des projets
 </a>
 
 <ng-container *ngIf="project">
@@ -55,7 +55,11 @@
             <h4>Tâches du projet</h4>
         </div>
         <ul class="list-group list-group-flush">
-            <li *ngFor="let task of tasks" class="list-group-item task" (click)="handleOpenTask(task)">
+            <li
+                *ngFor="let task of tasks"
+                class="list-group-item task"
+                (click)="handleOpenTask(task)"
+            >
                 <div class="row">
                     <!-- Informations de la tâche -->
                     <div class="col-md-4">
@@ -93,7 +97,7 @@
                     <!-- Priorité et statut -->
                     <div class="col-md-4 text-md-end">
                         <span class="badge bg-primary">{{
-                            task.status|translateStatus
+                            task.status | translateStatus
                         }}</span>
                         <app-star-rating
                             [priority]="task.priority"

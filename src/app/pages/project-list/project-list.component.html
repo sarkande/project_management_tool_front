@@ -26,7 +26,7 @@
         <ng-container *ngFor="let project of projects">
             <div
                 class="card mb-3 shadow-sm"
-                (click)="navigateToProject(project.project.id)"
+                (click)="navigateToProject(project.id)"
             >
                 <div class="card-body">
                     <div
@@ -34,12 +34,12 @@
                     >
                         <div>
                             <h5 class="card-title">
-                                {{ project.project.id }} -
-                                {{ project.project.name }}
+                                {{ project.id }} -
+                                {{ project.name }}
                             </h5>
                             <h6 class="card-subtitle mb-2 text-muted">
                                 {{
-                                    project.project.startDate
+                                    project.startDate
                                         | date : "mediumDate"
                                 }}
                                 - {{ project.role }}
@@ -50,7 +50,7 @@
                         </button>
                     </div>
                     <p class="card-text">
-                        {{ project.project.description }}
+                        {{ project.description }}
                     </p>
                 </div>
             </div>

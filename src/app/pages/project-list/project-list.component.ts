@@ -69,7 +69,7 @@ export class ProjectListComponent implements OnInit {
                     console.log('Projet créé:', response);
                     projectData.id = response;
                     let projectWithRole: ProjectWithRole = {
-                        project: projectData,
+                        ...projectData,
                         role: 'Administrateur',
                     };
 

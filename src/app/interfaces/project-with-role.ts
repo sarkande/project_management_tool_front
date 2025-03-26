@@ -1,6 +1,9 @@
 import { Project } from './project';
 
 export interface ProjectWithRole {
-    project: Project;
+    id: number;
+    name: string;
+    description?: string;
+    startDate?: string;
     role: string;
 }
