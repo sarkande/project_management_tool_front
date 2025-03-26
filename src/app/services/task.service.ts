@@ -41,4 +41,15 @@ export class TaskService {
             task
         );
     }
+    ///post project/{projectId}/task/{taskId}/user
+    addUserToTask(
+        projectId: number,
+        taskId: number,
+        email: string
+    ): Observable<number> {
+        return this.apiService.post(
+            `/project/${projectId}/task/${taskId}/user?email=${email}`,
+            {}
+        );
+    }
 }

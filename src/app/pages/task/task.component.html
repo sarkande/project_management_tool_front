@@ -34,9 +34,9 @@
                         class="form-select"
                         formControlName="status"
                     >
-                        <option value="Open">Open</option>
-                        <option value="InProgress">InProgress</option>
-                        <option value="Completed">Completed</option>
+                        <option value="pending">En attente</option>
+                        <option value="in_progress">En cours</option>
+                        <option value="done">Terminé</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -58,11 +58,7 @@
                         [readonly]="false"
                     >
                     </app-star-rating>
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                        [disabled]="!taskForm.dirty"
-                    >
+                    <button type="submit" class="btn btn-primary">
                         Sauvegarder
                     </button>
                 </div>
@@ -73,6 +69,25 @@
     <!-- Section Utilisateurs avec exploitation de l'interface User -->
     <div class="mt-4">
         <h2>Utilisateurs</h2>
+        <form
+            [formGroup]="userForm"
+            (ngSubmit)="addUserToTask()"
+            class="input-group mb-3"
+        >
+            <input
+                type="email"
+                class="form-control"
+                placeholder="Adresse email"
+                formControlName="email"
+            />
+            <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="!userForm.valid"
+            >
+                Ajouter
+            </button>
+        </form>
         <ul class="list-group">
             <li class="list-group-item" *ngFor="let user of task.users">
                 <strong>{{ user.username }}</strong> ({{ user.email }})
