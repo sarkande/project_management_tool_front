@@ -1,35 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from '../../services/project.service';
-import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
-import { Project } from '../../interfaces/project';
 import { CommonModule } from '@angular/common';
 import { User } from '../../interfaces/user';
-import { FormProjectComponent } from '../../components/form-project/form-project.component';
-import { ProjectWithRole } from '../../interfaces/project-with-role';
 import { Router } from '@angular/router';
+import { Task } from '../../interfaces/task';
+import { UserService } from '../../services/user.service';
+import { FilterTasksPipe } from '../../pipes/filter-tasks.pipe';
+import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
+import { TranslateStatusPipe } from '../../pipes/translate-status.pipe';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [CommonModule, FormProjectComponent],
+    imports: [CommonModule, FilterTasksPipe, StarRatingComponent, TranslateStatusPipe],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
     constructor(
         private authService: AuthService,
-        private userService: UserService,
-        private projectService: ProjectService,
-        private router: Router
+        private router: Router,
+        private userService: UserService
     ) {}
-    projects: ProjectWithRole[] = [];
     user!: User | null;
 
-    isOpenCreateProjectForm = false;
-
-    successMessage = '';
-    errorMessage = '';
+    tasks: Task[] = [];
+    statuses: Set<string> = new Set();
 
     ngOnInit(): void {
         if (!this.authService.isLoggedIn()) this.authService.logout();
@@ -37,11 +33,21 @@ export class DashboardComponent implements OnInit {
         this.user = this.authService.user;
         if (!this.user) return;
 
-        this.userService.getProjects(this.user.id).subscribe({
-            next: (projects) => {
-                console.log('Projects:', projects);
+        // Get all tasks for the current user
+        this.userService.getTasks(this.user.id).subscribe({
+            next: (tasks) => {
+                console.log('Tasks:', tasks);
 
-                this.projects = projects;
+                this.tasks = tasks;
+                //Filter non tasks
+                this.tasks = this.tasks.filter(
+                    (task) => typeof task !== 'number'
+                );
+                console.log('Tasks:', this.tasks);
+
+                console.log(tasks);
+
+                this.extractStatuses();
             },
             error: (error) => {
                 console.error('Error:', error);
@@ -52,60 +58,14 @@ export class DashboardComponent implements OnInit {
     logout() {
         this.authService.logout();
     }
-    toggleCreateProjectForm() {
-        console.log('Open modal');
-        this.isOpenCreateProjectForm = !this.isOpenCreateProjectForm;
+
+    navigateToProjectList() {
+        this.router.navigate(['/projects']);
     }
 
-    createProject(projectData: Project) {
-        this.successMessage = '';
-        this.errorMessage = '';
-
-        console.error('Received project data:', projectData);
-        // Traitez ici les données du projet, comme les envoyer à un service ou les stocker
-        this.projectService
-            .createProject(projectData, this.user!.id)
-            .subscribe({
-                next: (response) => {
-                    console.log('Projet créé:', response);
-                    projectData.id = response;
-                    let projectWithRole: ProjectWithRole = {
-                        project: projectData,
-                        role: 'Administrateur',
-                    };
-
-                    this.projects.push(projectWithRole);
-                    this.isOpenCreateProjectForm = false;
-                    this.successMessage = 'Projet créé avec succès';
-                },
-                error: (error) => {
-                    console.error('Erreur:', error);
-                    switch (error.status) {
-                        case 0:
-                            this.errorMessage = 'Le serveur est injoignable';
-                            break;
-                        case 401:
-                            this.errorMessage = 'Non autorisé';
-                            break;
-                        case 403:
-                            this.errorMessage = 'Interdit';
-                            break;
-                        case 404:
-                            this.errorMessage = 'Non trouvé';
-                            break;
-                        case 500:
-                            this.errorMessage = 'Erreur interne du serveur';
-                            break;
-                        default:
-                            this.errorMessage = 'Une erreur est survenue';
-                            break;
-                    }
-                },
-            });
-    }
-
-    navigateToProject(projectId: number) {
-        console.log('Open list users for project:', projectId);
-        this.router.navigate(['/project', projectId]);
+    extractStatuses() {
+        this.tasks.forEach((task) => {
+            this.statuses.add(task.status);
+        });
     }
 }

@@ -82,7 +82,7 @@ export class FormTaskComponent {
 
             data.description = description ?? '';
             if (dueDate != null && dueDate != '')
-                data.dueDate = new Date(dueDate);
+                data.dueDate = new Date(dueDate); 
 
             console.log('Data sent:', data);
 

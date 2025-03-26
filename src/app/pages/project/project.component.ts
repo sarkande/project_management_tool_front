@@ -11,6 +11,7 @@ import { FormManageUserProjectComponent } from '../../components/form-manage-use
 import { FormTaskComponent } from '../../components/form-task/form-task.component';
 import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
 import { Router } from '@angular/router';
+import { TranslateStatusPipe } from '../../pipes/translate-status.pipe';
 
 @Component({
     selector: 'app-project',
@@ -21,6 +22,7 @@ import { Router } from '@angular/router';
         FormManageUserProjectComponent,
         FormTaskComponent,
         StarRatingComponent,
+        TranslateStatusPipe
     ],
     templateUrl: './project.component.html',
     styleUrl: './project.component.scss',
@@ -129,18 +131,6 @@ export class ProjectComponent implements OnInit {
         });
     }
 
-    translateStatus(text: string) {
-        switch (text.toLowerCase()) {
-            case 'pending':
-                return 'En attente';
-            case 'in_progress':
-                return 'En cours';
-            case 'done':
-                return 'Terminé';
-            default:
-                return text;
-        }
-    }
 
     handleOpenTask(task: Task): void {
         if (!this.project || !task) {

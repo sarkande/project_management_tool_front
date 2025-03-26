@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="card mt-4 mb-4" *ngIf="isUserAdmin">
+    <div class="card mt-4 mb-4" *ngIf="isUserAdmin || isUserMember">
         <button class="btn btn-primary" (click)="handleOpenCreateTaskForm()">
             Créer une tâche
         </button>
@@ -93,7 +93,7 @@
                     <!-- Priorité et statut -->
                     <div class="col-md-4 text-md-end">
                         <span class="badge bg-primary">{{
-                            translateStatus(task.status)
+                            task.status|translateStatus
                         }}</span>
                         <app-star-rating
                             [priority]="task.priority"

@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
 import { ProjectService } from '../../services/project.service';
 import { User } from '../../interfaces/user';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-task',
@@ -30,15 +31,16 @@ export class TaskComponent implements OnInit {
     taskForm!: FormGroup;
     userForm!: FormGroup;
     task!: Task;
-    originalTask!: Task;
     projectId!: number;
     taskId!: number;
     usersPool!: User[];
+    currentUserRole = '';
 
     constructor(
         private route: ActivatedRoute,
         private taskService: TaskService,
-        private projectService: ProjectService
+        private projectService: ProjectService,
+        private authService: AuthService
     ) {}
 
     ngOnInit(): void {
@@ -49,7 +51,6 @@ export class TaskComponent implements OnInit {
             this.taskService.getTask(this.projectId, this.taskId).subscribe({
                 next: (task) => {
                     this.task = task;
-                    this.originalTask = { ...task };
                     this.initForm(task);
                 },
                 error: (error) => {
@@ -63,22 +64,26 @@ export class TaskComponent implements OnInit {
     }
 
     initForm(task: Task) {
+        const formattedDate = task.dueDate
+            ? this.formatDate(task.dueDate)
+            : null;
+
         this.taskForm = new FormGroup({
             name: new FormControl(task.name, Validators.required),
             description: new FormControl(task.description),
             status: new FormControl(task.status, Validators.required),
-            dueDate: new FormControl(
-                new Date(task.dueDate ?? ''),
-                Validators.required
-            ),
+            dueDate: new FormControl(formattedDate),
             priority: new FormControl(task.priority, Validators.required),
         });
-
-        this.taskForm.valueChanges.subscribe(() => {});
 
         this.projectService.getUsersByProject(this.projectId).subscribe({
             next: (users) => {
                 this.usersPool = users;
+                const currentUser = this.authService.user;
+
+                this.currentUserRole = users.find(
+                    (user: User) => user.id === currentUser!.id
+                )?.role;
             },
             error: (error) => {
                 console.error('Error:', error);
@@ -87,9 +92,9 @@ export class TaskComponent implements OnInit {
     }
 
     saveTask() {
+        console.log('Saving task');
         if (this.taskForm.valid) {
             const updatedTask = {
-                ...this.originalTask,
                 ...this.taskForm.value,
             };
             this.taskService
@@ -103,6 +108,9 @@ export class TaskComponent implements OnInit {
                         console.error('Error updating task:', error);
                     },
                 });
+        } else {
+            console.error('Task form is invalid');
+            console.log(this.taskForm);
         }
     }
 
@@ -110,7 +118,7 @@ export class TaskComponent implements OnInit {
         if (this.userForm.valid) {
             const userEmail = this.userForm.value.email;
             console.log('Adding user with email:', userEmail);
-        
+
             // On verifie si l'utilisateur est dans la pool d"users associés au projet
             const user = this.usersPool.find((u) => u.email === userEmail);
             if (!user) {
@@ -119,7 +127,10 @@ export class TaskComponent implements OnInit {
             }
 
             // On verifie si l'utilisateur est déjà associé à la tâche
-            if (this.task.users && this.task.users.find((u) => u.id === user.id)) {
+            if (
+                this.task.users &&
+                this.task.users.find((u) => u.id === user.id)
+            ) {
                 console.error('User already assigned to task');
                 return;
             }
@@ -139,16 +150,32 @@ export class TaskComponent implements OnInit {
         }
     }
 
-    refreshTask(){
+    refreshTask() {
         this.taskService.getTask(this.projectId, this.taskId).subscribe({
             next: (task) => {
                 this.task = task;
-                this.originalTask = { ...task };
                 this.initForm(task);
             },
             error: (error) => {
                 console.error('Error:', error);
             },
         });
+    }
+    get isUserAdmin(): boolean {
+        return this.currentUserRole === 'Administrateur';
+    }
+    get isUserMember(): boolean {
+        return this.currentUserRole === 'Membre';
+    }
+    get isUserWatcher(): boolean {
+        return this.currentUserRole === 'Observateur';
+    }
+
+    formatDate(date: Date): string {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = `0${d.getMonth() + 1}`.slice(-2);
+        const day = `0${d.getDate()}`.slice(-2);
+        return `${year}-${month}-${day}`;
     }
 }

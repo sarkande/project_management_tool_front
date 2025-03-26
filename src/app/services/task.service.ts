@@ -10,6 +10,8 @@ import { TaskForm } from '../interfaces/task-form';
 export class TaskService {
     constructor(private apiService: ApiService) {}
 
+    
+
     getTasks(projectId: number): Observable<Task[]> {
         return this.apiService.get(`/project/${projectId}/tasks`);
     }
@@ -34,8 +36,9 @@ export class TaskService {
     updatePartialTask(
         projectId: number,
         taskId: number,
-        task: Partial<Task>
+        task: TaskForm
     ): Observable<void> {
+        console.log('Task:', task);
         return this.apiService.patch(
             `/project/${projectId}/task/${taskId}`,
             task

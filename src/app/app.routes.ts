@@ -5,6 +5,7 @@ import { ProjectComponent } from './pages/project/project.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeGuard } from './guards/home.guard';
 import { TaskComponent } from './pages/task/task.component';
+import { ProjectListComponent } from './pages/project-list/project-list.component';
 
 export const routes: Routes = [
     {
@@ -15,6 +16,11 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent,
+        canActivate: [AuthGuard],
+    },
+    {
+        path: 'projects',
+        component: ProjectListComponent,
         canActivate: [AuthGuard],
     },
     {

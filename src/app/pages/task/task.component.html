@@ -7,7 +7,11 @@
     <!-- Affichage des informations de la tâche avec Bootstrap -->
     <div class="card">
         <div class="card-body">
-            <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
+            <form
+                [formGroup]="taskForm"
+                (ngSubmit)="saveTask()"
+                *ngIf="isUserAdmin || isUserMember"
+            >
                 <div class="mb-3">
                     <label for="name" class="form-label">Nom</label>
                     <input
@@ -61,6 +65,60 @@
                     <button type="submit" class="btn btn-primary">
                         Sauvegarder
                     </button>
+                </div>
+            </form>
+            <form [formGroup]="taskForm" *ngIf="isUserWatcher">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom</label>
+                    <input
+                        type="text"
+                        id="name"
+                        class="form-control"
+                        formControlName="name"
+                        [readonly]="true"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label"
+                        >Description</label
+                    >
+                    <textarea
+                        id="description"
+                        class="form-control"
+                        formControlName="description"
+                        [readonly]="true"
+                    ></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Statut</label>
+                    <select
+                        id="status"
+                        class="form-select"
+                        formControlName="status"
+                        [disabled]="true"
+                    >
+                        <option value="pending">En attente</option>
+                        <option value="in_progress">En cours</option>
+                        <option value="done">Terminé</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="dueDate" class="form-label">Échéance</label>
+                    <input
+                        type="date"
+                        id="dueDate"
+                        class="form-control"
+                        formControlName="dueDate"
+                        [readonly]="true"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="priority" class="form-label">Priorité</label>
+                    <app-star-rating
+                        [priority]="taskForm.get('priority')?.value"
+                        [readonly]="true"
+                    >
+                    </app-star-rating>
                 </div>
             </form>
         </div>
