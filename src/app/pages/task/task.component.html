@@ -150,6 +150,7 @@
             </div>
         </div>
         <form
+            *ngIf="isUserAdmin || isUserMember"
             [formGroup]="userForm"
             (ngSubmit)="addUserToTask()"
             class="input-group mb-3"
