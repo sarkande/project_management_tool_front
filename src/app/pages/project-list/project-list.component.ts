@@ -38,8 +38,6 @@ export class ProjectListComponent implements OnInit {
 
         this.userService.getProjects(this.user.id).subscribe({
             next: (projects) => {
-                console.log('Projects:', projects);
-
                 this.projects = projects;
             },
             error: (error) => {
@@ -52,7 +50,6 @@ export class ProjectListComponent implements OnInit {
         this.authService.logout();
     }
     toggleCreateProjectForm() {
-        console.log('Open modal');
         this.isOpenCreateProjectForm = !this.isOpenCreateProjectForm;
     }
 
@@ -66,7 +63,6 @@ export class ProjectListComponent implements OnInit {
             .createProject(projectData, this.user!.id)
             .subscribe({
                 next: (response) => {
-                    console.log('Projet créé:', response);
                     projectData.id = response;
                     let projectWithRole: ProjectWithRole = {
                         ...projectData,
@@ -104,7 +100,6 @@ export class ProjectListComponent implements OnInit {
     }
 
     navigateToProject(projectId: number) {
-        console.log('Open list users for project:', projectId);
         this.router.navigate(['/project', projectId]);
     }
 

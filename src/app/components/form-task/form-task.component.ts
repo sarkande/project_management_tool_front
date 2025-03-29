@@ -52,7 +52,6 @@ export class FormTaskComponent {
 
     onSubmit() {
         if (this.taskForm.valid) {
-            console.log('Form Submitted!', this.taskForm.value);
             let name = this.taskForm.value.name;
             let description = this.taskForm.value.description;
             let priority = this.taskForm.value.priority;
@@ -84,11 +83,9 @@ export class FormTaskComponent {
             if (dueDate != null && dueDate != '')
                 data.dueDate = new Date(dueDate); 
 
-            console.log('Data sent:', data);
 
             this.taskService.postTask(this.projectId, data).subscribe(
                 (task) => {
-                    console.log('Task created', task);
                     this.taskForm.reset();
 
                     //Emit an event to notify the parent component that a task has been created

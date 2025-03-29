@@ -48,14 +48,12 @@ export class FormManageUserProjectComponent {
         this.successMessage = '';
 
         if (this.userForm.valid) {
-            console.log('Form Data:', this.userForm.value);
             if (!this.user) {
                 console.error('User not found');
                 this.errorMessage =
                     'Vous devez être connecté pour ajouter un utilisateur à un projet';
                 return;
             }
-            console.log(this.userForm.value.role);
             const role = this.convertRoleToFrench(this.userForm.value.role);
             if (!this.isRoleAvailable(role)) {
                 console.error('Invalid role:', role);
@@ -72,7 +70,6 @@ export class FormManageUserProjectComponent {
                 )
                 .subscribe({
                     next: (response) => {
-                        console.log('Response:', response);
                         this.successMessage = 'Utilisateur ajouté avec succès';
 
                         //clean the form and tell the parent component to refresh the list of users
@@ -90,7 +87,6 @@ export class FormManageUserProjectComponent {
         }
     }
     isRoleAvailable(role: string): boolean {
-        console.log('Role:', role);
         return (
             role === 'Administrateur' ||
             role === 'Membre' ||
@@ -99,7 +95,6 @@ export class FormManageUserProjectComponent {
     }
 
     convertRoleToFrench(role: string): string {
-        console.log('Role:', role);
         switch (role) {
             case 'admin':
                 return 'Administrateur';

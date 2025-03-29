@@ -57,7 +57,6 @@ export class ProjectComponent implements OnInit {
         //Get the data for this project
         this.projectService.getProject(projectId).subscribe({
             next: (project) => {
-                console.log('Project:', project);
                 this.project = project;
             },
             error: (error) => {
@@ -68,7 +67,6 @@ export class ProjectComponent implements OnInit {
         //get the lists of users assigned to this project
         this.projectService.getUsersByProject(projectId).subscribe({
             next: (users) => {
-                console.log('Users:', users);
 
                 this.users = users as User[];
 
@@ -77,10 +75,8 @@ export class ProjectComponent implements OnInit {
                     (user: User) => user.id === currentUser!.id
                 )?.role;
                 if (!this.currentUserRole || this.currentUserRole === '') {
-                    console.log('Current user role not found');
                     return;
                 }
-                console.log('Current user role:', this.currentUserRole);
             },
             error: (error) => {
                 console.error('Error:', error);
@@ -90,7 +86,6 @@ export class ProjectComponent implements OnInit {
         //get the tasks for this project
         this.taskService.getTasks(projectId).subscribe({
             next: (tasks) => {
-                console.log('Tasks:', tasks);
                 this.tasks = tasks;
             },
             error: (error) => {
@@ -112,7 +107,6 @@ export class ProjectComponent implements OnInit {
     handleRefreshUsers(): void {
         this.projectService.getUsersByProject(this.project!.id).subscribe({
             next: (users) => {
-                console.log('Users:', users);
                 this.users = users as User[];
             },
         });
@@ -125,7 +119,6 @@ export class ProjectComponent implements OnInit {
     handleRefreshTasks(): void {
         this.taskService.getTasks(this.project!.id).subscribe({
             next: (tasks) => {
-                console.log('Tasks:', tasks);
                 this.tasks = tasks;
             },
         });

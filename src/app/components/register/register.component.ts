@@ -62,10 +62,8 @@ export class RegisterComponent {
             };
 
             // Envoyer formValue au backend
-            console.log('Inscription valide:', formValue);
             this.userService.register(formValue).subscribe({
                 next: (user) => {
-                    console.log('Inscription réussie:', user);
                     this.serverSuccess = 'Inscription réussie';
                 },
                 error: (err) => {
@@ -83,7 +81,6 @@ export class RegisterComponent {
                     }
                 },
                 complete: () => {
-                    console.log('Requête terminée');
                 },
             });
         }

@@ -37,7 +37,6 @@ export class FormProjectComponent {
                 description: this.projectForm.value.description as string,
             };
 
-            console.log('Creating project:', project);
             this.onSubmit.emit(project);
         } else {
             console.error('Form is not valid', this.projectForm.errors);

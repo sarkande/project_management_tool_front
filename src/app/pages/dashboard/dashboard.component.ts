@@ -36,16 +36,11 @@ export class DashboardComponent implements OnInit {
         // Get all tasks for the current user
         this.userService.getTasks(this.user.id).subscribe({
             next: (tasks) => {
-                console.log('Tasks:', tasks);
-
                 this.tasks = tasks;
                 //Filter non tasks
                 this.tasks = this.tasks.filter(
                     (task) => typeof task !== 'number'
                 );
-                console.log('Tasks:', this.tasks);
-
-                console.log(tasks);
 
                 this.extractStatuses();
             },

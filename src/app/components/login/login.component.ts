@@ -33,7 +33,6 @@ export class LoginComponent implements AfterViewInit {
     });
 
     ngAfterViewInit(): void {
-        console.log('Email input:', this.email.nativeElement);
         setTimeout(() => {
             // this.email.nativeElement.focus();
         }, 2000);
@@ -42,16 +41,12 @@ export class LoginComponent implements AfterViewInit {
         if (this.loginForm.valid) {
             this.error = '';
             // Envoyer les données au backend
-            console.log('Formulaire valide:', this.loginForm.value);
             const loginData: UserAuthLogin = {
                 email: this.loginForm.value.email!, // L'opérateur '!' indique que 'email' et 'password' ne sont pas null ni undefined
                 password: this.loginForm.value.password!,
             };
             this.authService.login(loginData).subscribe({
                 next: (user) => {
-                    console.log('Utilisateur connecté:', user);
-                    //Redirect to dashboard
-                    //Activate guard
                     this.router.navigate(['/dashboard']);
                 },
                 error: (error) => {

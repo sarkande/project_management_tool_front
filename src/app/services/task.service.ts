@@ -38,7 +38,6 @@ export class TaskService {
         taskId: number,
         task: TaskForm
     ): Observable<void> {
-        console.log('Task:', task);
         return this.apiService.patch(
             `/project/${projectId}/task/${taskId}`,
             task

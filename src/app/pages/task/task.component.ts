@@ -92,7 +92,6 @@ export class TaskComponent implements OnInit {
     }
 
     saveTask() {
-        console.log('Saving task');
         if (this.taskForm.valid) {
             const updatedTask = {
                 ...this.taskForm.value,
@@ -101,7 +100,6 @@ export class TaskComponent implements OnInit {
                 .updatePartialTask(this.projectId, this.taskId, updatedTask)
                 .subscribe({
                     next: () => {
-                        console.log('Task updated successfully');
                         this.refreshTask();
                     },
                     error: (error) => {
@@ -110,14 +108,12 @@ export class TaskComponent implements OnInit {
                 });
         } else {
             console.error('Task form is invalid');
-            console.log(this.taskForm);
         }
     }
 
     addUserToTask() {
         if (this.userForm.valid) {
             const userEmail = this.userForm.value.email;
-            console.log('Adding user with email:', userEmail);
 
             // On verifie si l'utilisateur est dans la pool d"users associés au projet
             const user = this.usersPool.find((u) => u.email === userEmail);
@@ -140,7 +136,6 @@ export class TaskComponent implements OnInit {
                 .addUserToTask(this.projectId, this.taskId, userEmail)
                 .subscribe({
                     next: () => {
-                        console.log('User added to task');
                         this.refreshTask();
                     },
                     error: () => {
