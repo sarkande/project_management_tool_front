@@ -9,7 +9,6 @@ import {
 } from '@angular/forms';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { TaskService } from '../../services/task.service';
-import { Task } from '../../interfaces/task';
 import { TaskForm } from '../../interfaces/task-form';
 
 @Component({
@@ -87,7 +86,6 @@ export class FormTaskComponent {
             this.taskService.postTask(this.projectId, data).subscribe(
                 (task) => {
                     this.taskForm.reset();
-
                     //Emit an event to notify the parent component that a task has been created
                     this.refreshTasks.emit();
                 },

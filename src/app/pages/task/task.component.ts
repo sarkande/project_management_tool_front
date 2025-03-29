@@ -36,6 +36,18 @@ export class TaskComponent implements OnInit {
     usersPool!: User[];
     currentUserRole = '';
 
+    // Messages d'erreur et de succès
+    messages = {
+        errors: {
+            task: '',
+            user: '',
+        },
+        success: {
+            task: '',
+            user: '',
+        },
+    };
+
     constructor(
         private route: ActivatedRoute,
         private taskService: TaskService,
@@ -92,6 +104,11 @@ export class TaskComponent implements OnInit {
     }
 
     saveTask() {
+        // Reset messages
+        this.messages.errors.task = '';
+        this.messages.success.task = '';
+
+        // On verifie si le formulaire est valide
         if (this.taskForm.valid) {
             const updatedTask = {
                 ...this.taskForm.value,
@@ -100,25 +117,34 @@ export class TaskComponent implements OnInit {
                 .updatePartialTask(this.projectId, this.taskId, updatedTask)
                 .subscribe({
                     next: () => {
+                        this.messages.success.task =
+                            'Tâche mise à jour avec succès.';
                         this.refreshTask();
                     },
                     error: (error) => {
-                        console.error('Error updating task:', error);
+                        this.messages.errors.task =
+                            'Erreur lors de la mise à jour de la tâche.';
                     },
                 });
         } else {
-            console.error('Task form is invalid');
+            this.messages.errors.task =
+                'Veuillez remplir tous les champs obligatoires.';
         }
     }
 
     addUserToTask() {
+        // Reset messages
+        this.messages.errors.user = '';
+        this.messages.success.user = '';
+
         if (this.userForm.valid) {
             const userEmail = this.userForm.value.email;
 
             // On verifie si l'utilisateur est dans la pool d"users associés au projet
             const user = this.usersPool.find((u) => u.email === userEmail);
             if (!user) {
-                console.error('User not found in the pool');
+                this.messages.errors.user =
+                    "L'utilisateur n'est pas associé au projet.";
                 return;
             }
 
@@ -127,7 +153,8 @@ export class TaskComponent implements OnInit {
                 this.task.users &&
                 this.task.users.find((u) => u.id === user.id)
             ) {
-                console.error('User already assigned to task');
+                this.messages.errors.user =
+                    "L'utilisateur est déjà associé à la tâche.";
                 return;
             }
 
@@ -136,10 +163,13 @@ export class TaskComponent implements OnInit {
                 .addUserToTask(this.projectId, this.taskId, userEmail)
                 .subscribe({
                     next: () => {
+                        this.messages.success.user =
+                            'Utilisateur ajouté à la tâche avec succès.';
                         this.refreshTask();
                     },
                     error: () => {
-                        console.error('Error adding user to task:');
+                        this.messages.errors.user =
+                            "Erreur lors de l'ajout de l'utilisateur à la tâche.";
                     },
                 });
         }

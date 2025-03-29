@@ -6,24 +6,25 @@
         </button>
     </div>
 
-    <div *ngIf="!tasks" class="alert alert-warning" role="alert">
+    <div
+        *ngIf="!tasks || tasks.length === 0"
+        class="alert alert-warning"
+        role="alert"
+    >
         Aucune tâche trouvée.
     </div>
-
-<div class="row">
-        <div class="col-md-4" *ngFor="let status of statuses">
-            <div class="kanban-column">
-                <h3 class="kanban-column-title">{{ status | translateStatus }}</h3>
-                <div *ngFor="let task of tasks | filterTasks: status" class="kanban-task">
-                    <h5>{{ task.name }}</h5>
-                    <p>{{ task.description }}</p>
-                    <app-star-rating
-                        [priority]="task.priority"
-                        [readonly]="true"
-                    >
-                    </app-star-rating>
-                    <div>{{ task.dueDate | date:'shortDate' }}</div>
-                </div>
+    <div class="kanban">
+        <div class="kanban-column" *ngFor="let status of statuses">
+            <h3 class="kanban-column-title">{{ status | translateStatus }}</h3>
+            <div
+                *ngFor="let task of tasks | filterTasks : status"
+                class="kanban-task"
+            >
+                <h5>{{ task.name }}</h5>
+                <p>{{ task.description }}</p>
+                <app-star-rating [priority]="task.priority" [readonly]="true">
+                </app-star-rating>
+                <div>{{ task.dueDate | date : "shortDate" }}</div>
             </div>
         </div>
     </div>

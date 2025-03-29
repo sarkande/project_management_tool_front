@@ -77,12 +77,19 @@ export class FormManageUserProjectComponent {
                         this.refreshUsers.emit();
                     },
                     error: (error) => {
-                        console.error('Error:', error);
-                        this.errorMessage = error.message;
+                        switch(error.status) {
+                            case 401:
+                                this.errorMessage = 'L\'utilisateur est déjà membre du projet';
+                                break;
+                            case 404:
+                                this.errorMessage = "L'utilisateur n'existe pas";
+                                break;
+                            default:
+                                this.errorMessage = 'Une erreur est survenue';
+                        }
                     },
                 });
         } else {
-            console.error('Invalid form');
             this.errorMessage = 'Veuillez vérifier les informations saisies';
         }
     }

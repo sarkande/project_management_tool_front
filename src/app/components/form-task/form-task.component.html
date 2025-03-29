@@ -10,7 +10,7 @@
             class="form-control"
             id="name"
             formControlName="name"
-            placeholder="Entrez le nom de la tâchee"
+            placeholder="Entrez le nom de la tâche"
         />
         <div
             *ngIf="taskForm.get('name')?.errors?.['required'] && taskForm.get('name')?.touched"

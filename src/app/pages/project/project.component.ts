@@ -87,6 +87,7 @@ export class ProjectComponent implements OnInit {
         this.taskService.getTasks(projectId).subscribe({
             next: (tasks) => {
                 this.tasks = tasks;
+                console.log('Tasks:', tasks);
             },
             error: (error) => {
                 console.error('Error:', error);
@@ -117,6 +118,7 @@ export class ProjectComponent implements OnInit {
     }
 
     handleRefreshTasks(): void {
+        this.isOpenCreateTaskForm = false;
         this.taskService.getTasks(this.project!.id).subscribe({
             next: (tasks) => {
                 this.tasks = tasks;

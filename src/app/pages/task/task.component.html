@@ -62,6 +62,17 @@
                         [readonly]="false"
                     >
                     </app-star-rating>
+                    <div *ngIf="messages.errors.task.length > 0">
+                        <div class="alert alert-danger" role="alert">
+                            {{ messages.errors.task }}
+                        </div>
+                    </div>
+                    <div *ngIf="messages.success.task.length > 0">
+                        <div class="alert alert-success" role="alert">
+                            {{ messages.success.task }}
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">
                         Sauvegarder
                     </button>
@@ -127,6 +138,17 @@
     <!-- Section Utilisateurs avec exploitation de l'interface User -->
     <div class="mt-4">
         <h2>Utilisateurs</h2>
+
+        <div *ngIf="messages.errors.user.length > 0">
+            <div class="alert alert-danger" role="alert">
+                {{ messages.errors.user }}
+            </div>
+        </div>
+        <div *ngIf="messages.success.user.length > 0">
+            <div class="alert alert-success" role="alert">
+                {{ messages.success.user }}
+            </div>
+        </div>
         <form
             [formGroup]="userForm"
             (ngSubmit)="addUserToTask()"
