@@ -6,7 +6,6 @@ import {
     Validators,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { Project } from '../../interfaces/project';
 import { ProjectForm } from '../../interfaces/project-form';
 
 @Component({
