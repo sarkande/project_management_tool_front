@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss',
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent  {
     @ViewChild('email') email!: ElementRef<HTMLInputElement>;
     @ViewChild('password') password!: ElementRef<HTMLInputElement>;
     error = '';
@@ -32,11 +32,7 @@ export class LoginComponent implements AfterViewInit {
         ]),
     });
 
-    ngAfterViewInit(): void {
-        setTimeout(() => {
-            // this.email.nativeElement.focus();
-        }, 2000);
-    }
+ 
     onSubmit() {
         if (this.loginForm.valid) {
             this.error = '';
