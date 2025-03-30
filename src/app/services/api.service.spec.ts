@@ -1,59 +1,112 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ApiService } from './api.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
-@Injectable({
-    providedIn: 'root',
-})
-export class ApiService {
-    private baseUrl = 'http://localhost:8080'; // Assurez-vous que c'est correct
+describe('ApiService', () => {
+  let service: ApiService;
+  let httpMock: HttpTestingController;
+  const baseURL = 'http://localhost:8080';
 
-    constructor(private http: HttpClient) {}
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [ApiService]
+    });
+    service = TestBed.inject(ApiService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
 
-    get(url: string): Observable<any> {
-        return this.http.get(`${this.baseUrl}${url}`).pipe(
-            catchError(this.handleError) // Utilisation de la méthode de gestion d'erreur
-        );
-    }
+  afterEach(() => {
+    httpMock.verify();
+  });
 
-    post(url: string, body: any): Observable<any> {
-        return this.http
-            .post(`${this.baseUrl}${url}`, body)
-            .pipe(catchError(this.handleError));
-    }
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 
-    put(url: string, body: any): Observable<any> {
-        return this.http
-            .put(`${this.baseUrl}${url}`, body)
-            .pipe(catchError(this.handleError));
-    }
+  it('should perform a GET request', () => {
+    const mockData = { message: 'success' };
+    
+    service.get('/test').subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+    
+    const req = httpMock.expectOne(`${baseURL}/test`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
 
-    patch(url: string, body: any): Observable<any> {
-        return this.http
-            .patch(`${this.baseUrl}${url}`, body)
-            .pipe(catchError(this.handleError));
-    }
+  it('should perform a POST request', () => {
+    const mockData = { message: 'created' };
+    const postData = { name: 'test' };
+    
+    service.post('/test', postData).subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+    
+    const req = httpMock.expectOne(`${baseURL}/test`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(postData);
+    req.flush(mockData);
+  });
 
-    delete(url: string): Observable<any> {
-        return this.http
-            .delete(`${this.baseUrl}${url}`)
-            .pipe(catchError(this.handleError));
-    }
+  it('should perform a PUT request', () => {
+    const mockData = { message: 'updated' };
+    const putData = { name: 'test' };
+    
+    service.put('/test', putData).subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+    
+    const req = httpMock.expectOne(`${baseURL}/test`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual(putData);
+    req.flush(mockData);
+  });
 
-    // Méthode de gestion d'erreur
-    private handleError(error: HttpErrorResponse) {
-        if (error.error instanceof ErrorEvent) {
-            // Erreur côté client ou erreur réseau
-            console.error('An error occurred:', error.error.message);
-        } else {
-            // Le backend a renvoyé une réponse d'erreur
-            console.error(
-                `Backend returned code ${error.status}, ` +
-                    `body was: ${JSON.stringify(error.error)}`
-            ); // Log du corps de l'erreur
-        }
-        // Retourner un Observable avec le corps de l'erreur pour que les tests puissent le vérifier
-        return throwError(() => error); // Retourne l'erreur entière pour le test
-    }
-}
+  it('should perform a PATCH request', () => {
+    const mockData = { message: 'patched' };
+    const patchData = { name: 'test' };
+    
+    service.patch('/test', patchData).subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+    
+    const req = httpMock.expectOne(`${baseURL}/test`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual(patchData);
+    req.flush(mockData);
+  });
+
+  it('should perform a DELETE request', () => {
+    const mockData = { message: 'deleted' };
+    
+    service.delete('/test').subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+    
+    const req = httpMock.expectOne(`${baseURL}/test`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush(mockData);
+  });
+
+  it('should handle errors correctly', () => {
+    const errorResponse = new HttpErrorResponse({
+      error: { message: 'Not Found' },
+      status: 404,
+      statusText: 'Not Found'
+    });
+
+    service.get('/error').subscribe({
+      next: () => fail('Expected an error, but got success response'),
+      error: (error) => {
+        expect(error.message).toBe('Not Found');
+        expect(error.status).toBe(404);
+      }
+    });
+
+    const req = httpMock.expectOne(`${baseURL}/error`);
+    req.flush(errorResponse.error, { status: errorResponse.status, statusText: errorResponse.statusText });
+  });
+});

@@ -20,8 +20,16 @@ export class AuthService {
         private router: Router
     ) {
         const storedUser = this.storageService.getItem('currentUser');
-        if (storedUser) {
-            this.currentUserSubject.next(JSON.parse(storedUser));
+        try {
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                if (parsedUser && parsedUser.id && parsedUser.username && parsedUser.email) {
+                    this.currentUserSubject.next(parsedUser);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to parse stored user:', error);
+            this.currentUserSubject.next(null);
         }
     }
 
@@ -39,7 +47,6 @@ export class AuthService {
                 this.currentUserSubject.next(user);
             }),
             catchError((error) => {
-                // Propager l'erreur pour un traitement ultérieur
                 console.error(error);
                 return throwError(() => error);
             })
@@ -49,7 +56,6 @@ export class AuthService {
         this.storageService.removeItem('currentUser');
         this.currentUserSubject.next(null);
 
-        // Rediriger l'utilisateur vers la page de connexion
         this.router.navigate(['/']);
     }
 
