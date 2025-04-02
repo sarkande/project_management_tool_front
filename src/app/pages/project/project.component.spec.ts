@@ -23,7 +23,6 @@ describe('ProjectComponent', () => {
             snapshot: { params: { id: 1 } },
         });
 
-        console.log('ActivatedRoute mock:', activatedRouteSpy.snapshot.params); // Vérification du mock
 
         projectServiceSpy = jasmine.createSpyObj('ProjectService', [
             'getProject',
@@ -162,17 +161,5 @@ describe('ProjectComponent', () => {
             expect(routerSpy).not.toHaveBeenCalled();
         });
     });
-    describe('loadProjects', () => {
-        it('should load project data if project ID is provided', () => {
-            const mockProject: Project = { id: 1, name: 'Test Project' } as Project;
-            projectServiceSpy.getProject.and.returnValue(of(mockProject));
 
-            component.loadProjects(1);
-
-            expect(projectServiceSpy.getProject).toHaveBeenCalledWith(1);
-            expect(component.project).toEqual(mockProject);
-        });
-
-  
-    });
 });

@@ -44,24 +44,59 @@ export class ProjectComponent implements OnInit {
     ) {}
     ngOnInit(): void {
         //get the id from the route
-        console.log('Route params:', this.route.snapshot.params); // Log complet
-        console.log('Project ID:', this.route.snapshot.params['id']); // Log spécifique
-
         if (!this.route.snapshot.params['id']) {
             return;
         }
+        const projectId = this.route.snapshot.params['id'];
 
         if (!this.authService.isLoggedIn()) {
             return;
         }
-        const projectId = this.route.snapshot.params['id'];
+        const currentUser = this.authService.user;
+
         //Get the data for this project
-        this.loadProjects(projectId);
+        this.projectService.getProject(projectId).subscribe({
+            next: (project) => {
+                console.log('Project:', project);
+                this.project = project;
+            },
+            error: (error) => {
+                console.log('Error:', error);
+            },
+        });
+
         //get the lists of users assigned to this project
-        this.handleRefreshUsers();
+        this.projectService.getUsersByProject(projectId).subscribe({
+            next: (users) => {
+                console.log('Users:', users);
+
+                this.users = users as User[];
+
+                //Extract the role of the current user for the project based on the authService
+                this.currentUserRole = users.find(
+                    (user: User) => user.id === currentUser!.id
+                )?.role;
+                if (!this.currentUserRole || this.currentUserRole === '') {
+                    console.log('Current user role not found');
+                    return;
+                }
+                console.log('Current user role:', this.currentUserRole);
+            },
+            error: (error) => {
+                console.log('Error:', error);
+            },
+        });
 
         //get the tasks for this project
-        this.handleRefreshTasks();
+        this.taskService.getTasks(projectId).subscribe({
+            next: (tasks) => {
+                console.log('Tasks:', tasks);
+                this.tasks = tasks;
+            },
+            error: (error) => {
+                console.log('Error:', error);
+            },
+        });
     }
 
     get isUserAdmin(): boolean {
@@ -73,21 +108,19 @@ export class ProjectComponent implements OnInit {
     get isUserWatcher(): boolean {
         return this.currentUserRole === 'Observateur';
     }
-    loadProjects(projectId: number): void {
-        this.projectService.getProject(projectId).subscribe({
-            next: (project) => {
-                this.project = project;
-            },
-            error: (error) => {
-                console.error('Error:', error);
-            },
-        });
-    }
+
     handleRefreshUsers(): void {
-        this.projectService.getUsersByProject(this.project!.id).subscribe({
+        console.log(this.project);
+        if(!this.project) {
+            return;
+        }
+        const projectId = this.project.id;
+        this.projectService.getUsersByProject(projectId).subscribe({
             next: (users) => {
                 this.users = users as User[];
- 
+                if (!this.authService.isLoggedIn()) {
+                    return;
+                }
                 //Extract the role of the current user for the project based on the authService
                 this.currentUserRole = users.find(
                     (user: User) => user.id === this.authService.user!.id
